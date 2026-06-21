@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BY GPT Tetoris</title>
+<style>
+  body {
+    font-family: monospace;
+    background: #111;
+    color: #eee;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    user-select: none;
+  }
+  #game {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 200px;
+    height: 400px;
+    background: #222;
+    border: 3px solid #555;
+  }
+  .cell {
+    width: 20px;
+    height: 20px;
+    box-sizing: border-box;
+    border: 1px solid #333;
+    float: left;
+  }
+  #controller {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    display: grid;
+    grid-template-columns: 60px 60px 60px;
+    grid-template-rows: 40px 40px;
+    gap: 10px;
+    justify-content: center;
+  }
+  #upBtn {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  #leftBtn {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  #downBtn {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  #rightBtn {
+    grid-column: 3;
+    grid-row: 2;
+  }
+  button {
+    padding: 0;
+    font-size: 18px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    background: #444;
+    color: #eee;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+  }
+  button:hover {
+    background: #666;
+  }
+  #undoReset {
+    position: absolute;
+    bottom: 90px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  #undoReset button {
+    width: 130px;
+    height: 36px;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  #saveLoad {
+    position: absolute;
+    bottom: 20px;
+    left: 220px;
+    display: flex;
+    gap: 10px;
+  }
+  #saveLoad button {
+    width: 80px;
+    height: 36px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  #status {
+    position: absolute;
+    top: 430px;
+    left: 20px;
+    min-height: 20px;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<h1 style="position:absolute; top:0; left:20px; margin:0; font-size:20px;">Tetoris Mini</h1>
+<div id="game"></div>
+
+<div id="controller">
+  <button id="upBtn">↑</button>
+  <button id="leftBtn">←</button>
+  <button id="downBtn">↓</button>
+  <button id="rightBtn">→</button>
+</div>
+
+<div id="undoReset">
+  <button id="undoBtn">一手戻る</button>
+  <button id="resetUndoBtn">すべて戻る</button>
+</div>
+
+<div id="saveLoad">
+  <button id="saveBtn">Save</button>
+  <button id="loadBtn">Load</button>
+</div>
+
+<div id="status"></div>
+
+<script>
+(() => {
+  const COLS = 10;
+  const ROWS = 20;
+
+  const gameEl = document.getElementById('game');
+  const statusEl = document.getElementById('status');
+
+  const TETROMINOS = [
+    {
+      shape: [
+        [0,0,0,0],
+        [1,1,1,1],
+        [0,0,0,0],
+        [0,0,0,0]
+      ],
+      color: '#00f0f0'
+    },
+    {
+      shape: [
+        [1,0,0],
+        [1,1,1],
+        [0,0,0]
+      ],
+      color: '#0000f0'
+    },
+    {
+      shape: [
+        [0,0,1],
+        [1,1,1],
+        [0,0,0]
+      ],
+      color: '#f0a000'
+    },
+    {
+      shape: [
+        [1,1],
+        [1,1]
+      ],
+      color: '#f0f000'
+    },
+    {
+      shape: [
+        [0,1,1],
+        [1,1,0],
+        [0,0,0]
+      ],
+      color: '#00f000'
+    },
+    {
+      shape: [
+        [0,1,0],
+        [1,1,1],
+        [0,0,0]
+      ],
+      color: '#a000f0'
+    },
+    {
+      shape: [
+        [1,1,0],
+        [0,1,1],
+        [0,0,0]
+      ],
+      color: '#f00000'
+    }
+  ];
+
+  let bag = [];
+  function createBag() {
+    bag = [0,1,2,3,4,5,6];
+    for(let i=bag.length-1; i>0; i--) {
+      const j = Math.floor(Math.random() * (i+1));
+      [bag[i], bag[j]] = [bag[j], bag[i]];
+    }
+  }
+
+  let board = [];
+  for(let r=0; r<ROWS; r++) {
+    board[r] = Array(COLS).fill(null);
+  }
+
+  let currentPiece = null;
+  let history = [];
+
+  function createBoardHtml() {
+    gameEl.innerHTML = '';
+    for(let r=0; r<ROWS; r++) {
+      for(let c=0; c<COLS; c++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.dataset.r = r;
+        cell.dataset.c = c;
+        gameEl.appendChild(cell);
+      }
+    }
+  }
+
+  function draw() {
+    for(let r=0; r<ROWS; r++) {
+      for(let c=0; c<COLS; c++) {
+        const idx = r*COLS + c;
+        const cell = gameEl.children[idx];
+        cell.style.background = board[r][c] || '#222';
+      }
+    }
+    if(currentPiece) {
+      const {shape, x, y, color} = currentPiece;
+      for(let r=0; r<shape.length; r++) {
+        for(let c=0; c<shape[r].length; c++) {
+          if(shape[r][c]) {
+            const boardR = y + r;
+            const boardC = x + c;
+            if(boardR>=0 && boardR<ROWS && boardC>=0 && boardC<COLS) {
+              const idx = boardR*COLS + boardC;
+              const cell = gameEl.children[idx];
+              cell.style.background = color;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  function spawnPiece() {
+    if(bag.length===0) createBag();
+    const type = bag.pop();
+    const {shape, color} = TETROMINOS[type];
+    currentPiece = {
+      type,
+      shape,
+      color,
+      x: Math.floor((COLS - shape[0].length)/2),
+      y: 0
+    };
+  }
+
+  function isCollide(x, y, shape) {
+    for(let r=0; r<shape.length; r++) {
+      for(let c=0; c<shape[r].length; c++) {
+        if(shape[r][c]) {
+          const boardR = y + r;
+          const boardC = x + c;
+          if(boardC<0 || boardC>=COLS || boardR>=ROWS) return true;
+          if(boardR>=0 && board[boardR][boardC]) return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  function rotate(shape) {
+    const H = shape.length;
+    const W = shape[0].length;
+    let newShape = [];
+    for(let c=0; c<W; c++) {
+      let newRow = [];
+      for(let r=H-1; r>=0; r--) {
+        newRow.push(shape[r][c]);
+      }
+      newShape.push(newRow);
+    }
+    return newShape;
+  }
+
+  function fixPiece() {
+    const {shape, x, y, color} = currentPiece;
+    for(let r=0; r<shape.length; r++) {
+      for(let c=0; c<shape[r].length; c++) {
+        if(shape[r][c]) {
+          const boardR = y + r;
+          const boardC = x + c;
+          if(boardR>=0 && boardR<ROWS && boardC>=0 && boardC<COLS) {
+            board[boardR][boardC] = color;
+          }
+        }
+      }
+    }
+    currentPiece = null;
+  }
+
+  function clearLines() {
+    let newBoard = [];
+    let linesCleared = 0;
+    for(let r=0; r<ROWS; r++) {
+      if(board[r].every(cell => cell !== null)) {
+        linesCleared++;
+      } else {
+        newBoard.push(board[r]);
+      }
+    }
+    for(let i=0; i<linesCleared; i++) {
+      newBoard.unshift(Array(COLS).fill(null));
+    }
+    board = newBoard;
+  }
+
+  function move(dx, dy) {
+    if(!currentPiece) return false;
+    const nx = currentPiece.x + dx;
+    const ny = currentPiece.y + dy;
+    if(!isCollide(nx, ny, currentPiece.shape)) {
+      saveHistory();
+      currentPiece.x = nx;
+      currentPiece.y = ny;
+      return true;
+    }
+    return false;
+  }
+
+  function rotateCurrent() {
+    if(!currentPiece) return false;
+    const newShape = rotate(currentPiece.shape);
+    if(!isCollide(currentPiece.x, currentPiece.y, newShape)) {
+      saveHistory();
+      currentPiece.shape = newShape;
+      return true;
+    }
+    return false;
+  }
+
+  function drop() {
+    if(!currentPiece) return;
+    if(!move(0,1)) {
+      fixPiece();
+      clearLines();
+      spawnPiece();
+      saveHistory(true);
+    }
+  }
+
+  function saveHistory(reset=false) {
+    if(reset) {
+      history = [];
+    }
+    const boardCopy = board.map(row => row.slice());
+    const pieceCopy = currentPiece ? {
+      type: currentPiece.type,
+      shape: currentPiece.shape.map(r => r.slice()),
+      color: currentPiece.color,
+      x: currentPiece.x,
+      y: currentPiece.y
+    } : null;
+    history.push({
+      board: boardCopy,
+      currentPiece: pieceCopy,
+      bag: bag.slice()
+    });
+    if(history.length > 100) history.shift();
+  }
+
+  function undo() {
+    if(history.length<=1) {
+      statusEl.textContent = '戻れる手がありません';
+      return;
+    }
+    history.pop();
+    const last = history[history.length-1];
+    board = last.board.map(row => row.slice());
+    currentPiece = last.currentPiece ? {
+      type: last.currentPiece.type,
+      shape: last.currentPiece.shape.map(r => r.slice()),
+      color: last.currentPiece.color,
+      x: last.currentPiece.x,
+      y: last.currentPiece.y
+    } : null;
+    bag = last.bag.slice();
+    statusEl.textContent = '一手戻りました';
+    draw();
+  }
+
+  function resetUndo() {
+    if(history.length === 0) return;
+    const first = history[0];
+    board = first.board.map(row => row.slice());
+    currentPiece = first.currentPiece ? {
+      type: first.currentPiece.type,
+      shape: first.currentPiece.shape.map(r => r.slice()),
+      color: first.currentPiece.color,
+      x: first.currentPiece.x,
+      y: first.currentPiece.y
+    } : null;
+    bag = first.bag.slice();
+    history = [first];
+    statusEl.textContent = 'すべて戻りました';
+    draw();
+  }
+
+  function saveGame() {
+    if(history.length === 0) {
+      statusEl.textContent = '保存する状態がありません';
+      return;
+    }
+    const last = history[history.length-1];
+    localStorage.setItem('tetrisSave', JSON.stringify(last));
+    statusEl.textContent = 'ゲームを保存しました';
+  }
+
+  function loadGame() {
+    const json = localStorage.getItem('tetrisSave');
+    if(!json) {
+      statusEl.textContent = '保存データがありません';
+      return;
+    }
+    try {
+      const data = JSON.parse(json);
+      board = data.board.map(row => row.slice());
+      currentPiece = data.currentPiece ? {
+        type: data.currentPiece.type,
+        shape: data.currentPiece.shape.map(r => r.slice()),
+        color: data.currentPiece.color,
+        x: data.currentPiece.x,
+        y: data.currentPiece.y
+      } : null;
+      bag = data.bag.slice();
+      history = [data];
+      statusEl.textContent = 'ゲームを読み込みました';
+      draw();
+    } catch(e) {
+      statusEl.textContent = '読み込みエラー';
+    }
+  }
+
+  function setupButtons() {
+    document.getElementById('upBtn').onclick = () => {
+      if(rotateCurrent()) {
+        statusEl.textContent = '回転しました';
+        draw();
+      } else {
+        statusEl.textContent = '回転できません';
+      }
+    };
+    document.getElementById('leftBtn').onclick = () => {
+      if(move(-1,0)) {
+        statusEl.textContent = '左に移動しました';
+        draw();
+      } else {
+        statusEl.textContent = '移動できません';
+      }
+    };
+    document.getElementById('downBtn').onclick = () => {
+      if(move(0,1)) {
+        statusEl.textContent = '下に移動しました';
+        draw();
+      } else {
+        statusEl.textContent = '移動できません';
+      }
+    };
+    document.getElementById('rightBtn').onclick = () => {
+      if(move(1,0)) {
+        statusEl.textContent = '右に移動しました';
+        draw();
+      } else {
+        statusEl.textContent = '移動できません';
+      }
+    };
+    document.getElementById('undoBtn').onclick = () => {
+      undo();
+    };
+    document.getElementById('resetUndoBtn').onclick = () => {
+      resetUndo();
+    };
+    document.getElementById('saveBtn').onclick = () => {
+      saveGame();
+    };
+    document.getElementById('loadBtn').onclick = () => {
+      loadGame();
+    };
+  }
+
+  function init() {
+    createBoardHtml();
+    createBag();
+    spawnPiece();
+    saveHistory(true);
+    draw();
+    setupButtons();
+    statusEl.textContent = 'ゲーム開始';
+  }
+
+  init();
+})();
+</script>
+</html>
