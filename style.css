@@ -1,0 +1,189 @@
+/*
+====================================
+全体設定
+====================================
+*/
+
+body {
+
+    margin: 0;
+
+    background: #0d1117;
+
+    color: white;
+
+    font-family: Arial, sans-serif;
+}
+
+
+/*
+====================================
+背景アニメーション領域
+====================================
+*/
+
+#particles {
+
+    position: fixed;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: -1;
+}
+
+
+/*
+====================================
+ヘッダー
+====================================
+*/
+
+header {
+
+    text-align: center;
+
+    padding: 100px 20px;
+}
+
+
+/*
+====================================
+タイトル
+====================================
+*/
+
+#title {
+
+    font-size: 4rem;
+
+    animation: glow 2s infinite alternate;
+}
+
+
+/*
+光るアニメーション
+*/
+
+@keyframes glow {
+
+    from {
+
+        text-shadow:
+            0 0 10px cyan;
+    }
+
+    to {
+
+        text-shadow:
+            0 0 30px cyan,
+            0 0 50px cyan;
+    }
+}
+
+
+/*
+====================================
+メニュー
+====================================
+*/
+
+nav {
+
+    text-align: center;
+
+    margin-bottom: 50px;
+}
+
+nav a {
+
+    color: white;
+
+    text-decoration: none;
+
+    margin: 20px;
+
+    font-size: 1.2rem;
+}
+
+nav a:hover {
+
+    color: cyan;
+}
+
+
+/*
+====================================
+各セクション
+====================================
+*/
+
+section {
+
+    width: 80%;
+
+    margin: auto;
+
+    margin-bottom: 80px;
+}
+
+
+/*
+====================================
+スキルカード
+====================================
+*/
+
+.card {
+
+    display: inline-block;
+
+    padding: 15px 30px;
+
+    background: #161b22;
+
+    border-radius: 10px;
+
+    margin: 10px;
+
+    transition: 0.3s;
+}
+
+.card:hover {
+
+    transform: scale(1.1);
+
+    background: #1f2937;
+}
+
+
+/*
+====================================
+作品カード
+====================================
+*/
+
+.project {
+
+    background: #161b22;
+
+    padding: 20px;
+
+    margin-top: 20px;
+
+    border-radius: 10px;
+}
+
+
+/*
+====================================
+フッター
+====================================
+*/
+
+footer {
+
+    text-align: center;
+
+    padding: 30px;
+}
