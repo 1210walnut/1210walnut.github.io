@@ -1,20 +1,19 @@
-let score = 0;
-let timeLeft = 15;
-let gameStarted = false;
-let timer;
-
 const scoreElement = document.getElementById("score");
 const timeElement = document.getElementById("time");
 const button = document.getElementById("clickButton");
 
-button.addEventListener("click", () => {
+let score = 0;
+let timeLeft = 15;
+let gameStarted = false;
 
-    // 初回クリックでゲーム開始
+button.addEventListener("click", function () {
+
     if (!gameStarted) {
         gameStarted = true;
         button.textContent = "クリック！";
 
-        timer = setInterval(() => {
+        const timer = setInterval(function () {
+
             timeLeft--;
             timeElement.textContent = timeLeft;
 
@@ -22,16 +21,15 @@ button.addEventListener("click", () => {
                 clearInterval(timer);
 
                 button.disabled = true;
-                button.textContent = "終了";
 
-                alert(`ゲーム終了！\n記録: ${score}回`);
+                alert("ゲーム終了！\n記録: " + score + "回");
             }
+
         }, 1000);
 
         return;
     }
 
-    // ゲーム中のクリック
     score++;
     scoreElement.textContent = score;
 });
