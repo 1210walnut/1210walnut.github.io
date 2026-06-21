@@ -54,11 +54,7 @@ my-homepage/
 
 リポジトリをクローンします。
 
-git clone https://github.com/yourname/my-homepage.git
-
 フォルダへ移動します。
-
-cd my-homepage
 
 index.html をブラウザで開いてください。
 
