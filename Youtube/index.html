@@ -2,61 +2,242 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>YouTube検索</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>YouTube Search Player</title>
 
 <style>
+
 body{
-    background:#181818;
+    margin:0;
+    background:#0f0f0f;
     color:white;
     font-family:sans-serif;
-    margin:20px;
 }
 
-input{
+header{
+    padding:15px;
+    background:#202020;
+}
+
+#searchBox{
     width:300px;
     padding:10px;
 }
 
 button{
     padding:10px;
+    cursor:pointer;
+}
+
+#player-area{
+    padding:20px;
+}
+
+#player{
+    max-width:900px;
+}
+
+.controls{
+    margin-top:10px;
+}
+
+.controls button{
+    margin-right:5px;
 }
 
 #results{
     display:grid;
-    grid-template-columns:repeat(auto-fill,300px);
+    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
     gap:15px;
-    margin-top:20px;
+    padding:20px;
 }
 
 .video{
     cursor:pointer;
+    background:#1c1c1c;
+    border-radius:10px;
+    overflow:hidden;
+    transition:.2s;
+}
+
+.video:hover{
+    transform:scale(1.02);
 }
 
 .video img{
     width:100%;
 }
 
-iframe{
-    width:100%;
-    max-width:900px;
-    height:500px;
-    margin-top:20px;
+.video-title{
+    padding:10px;
+    font-size:14px;
 }
+
 </style>
 </head>
-<body>
-<a href="https://1210walnut.github.io">
-    top
-</a>
-<h1>YouTube検索</h1>
 
-<input id="query" placeholder="検索">
-<button onclick="search()">検索</button>
+<body>
+
+<header>
+
+<input
+id="searchBox"
+type="text"
+placeholder="動画を検索">
+
+<button onclick="searchVideos()">
+検索
+</button>
+
+</header>
+
+<div id="player-area">
 
 <div id="player"></div>
+
+<div class="controls">
+
+<button onclick="playVideo()">
+▶ 再生
+</button>
+
+<button onclick="pauseVideo()">
+⏸ 停止
+</button>
+
+<button onclick="skip10()">
+⏩ +10秒
+</button>
+
+<input
+type="range"
+min="0"
+max="100"
+value="50"
+oninput="setVolume(this.value)">
+
+</div>
+
+</div>
+
 <div id="results"></div>
 
-<script src="script.js"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<script>
+
+const API_KEY = "AIzaSyBFY8IEdIfzqZK8tT2LxR8oRfkEblHkukg";
+
+let player;
+
+function onYouTubeIframeAPIReady(){
+
+    player = new YT.Player("player",{
+
+        height:"500",
+        width:"900",
+
+        videoId:"",
+
+        playerVars:{
+            autoplay:0,
+            controls:1
+        }
+
+    });
+
+}
+
+async function searchVideos(){
+
+    const query =
+        document.getElementById("searchBox").value;
+
+    if(!query) return;
+
+    const url =
+        `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=20&q=${encodeURIComponent(query)}&key=${API_KEY}`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    const results =
+        document.getElementById("results");
+
+    results.innerHTML = "";
+
+    data.items.forEach(video=>{
+
+        const videoId =
+            video.id.videoId;
+
+        const title =
+            video.snippet.title;
+
+        const thumbnail =
+            video.snippet.thumbnails.medium.url;
+
+        const div =
+            document.createElement("div");
+
+        div.className = "video";
+
+        div.innerHTML = `
+            <img src="${thumbnail}">
+            <div class="video-title">
+                ${title}
+            </div>
+        `;
+
+        div.onclick = ()=>{
+
+            player.loadVideoById(videoId);
+
+        };
+
+        results.appendChild(div);
+
+    });
+
+}
+
+function playVideo(){
+
+    if(player)
+        player.playVideo();
+
+}
+
+function pauseVideo(){
+
+    if(player)
+        player.pauseVideo();
+
+}
+
+function skip10(){
+
+    if(!player) return;
+
+    const current =
+        player.getCurrentTime();
+
+    player.seekTo(
+        current + 10,
+        true
+    );
+
+}
+
+function setVolume(value){
+
+    if(player)
+        player.setVolume(value);
+
+}
+
+</script>
 
 </body>
 </html>
