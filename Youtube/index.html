@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>YouTube検索</title>
+
+<style>
+body{
+    background:#181818;
+    color:white;
+    font-family:sans-serif;
+    margin:20px;
+}
+
+input{
+    width:300px;
+    padding:10px;
+}
+
+button{
+    padding:10px;
+}
+
+#results{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,300px);
+    gap:15px;
+    margin-top:20px;
+}
+
+.video{
+    cursor:pointer;
+}
+
+.video img{
+    width:100%;
+}
+
+iframe{
+    width:100%;
+    max-width:900px;
+    height:500px;
+    margin-top:20px;
+}
+</style>
+</head>
+<body>
+
+<h1>YouTube検索</h1>
+
+<input id="query" placeholder="検索">
+<button onclick="search()">検索</button>
+
+<div id="player"></div>
+<div id="results"></div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
