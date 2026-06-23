@@ -1,4 +1,4 @@
-const API_KEY = "ここにAPIキー";
+const API_KEY = "AIzaSyBFY8IEdIfzqZK8tT2LxR8oRfkEblHkukg";
 
 async function search() {
 
