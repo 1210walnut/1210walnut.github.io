@@ -55,31 +55,47 @@ header {
 
 #title {
 
-    font-size: 4rem;
+    font-size: 4.5rem;
 
-    animation: glow 2s infinite alternate;
-}
+    font-weight: bold;
+
+    color: #ffffff;
+
+    text-transform: uppercase;
+
+    letter-spacing: 3px;
+
+    animation: neonGlow 2s ease-in-out infinite alternate;
+}}
 
 
 /*
 光るアニメーション
 */
 
-@keyframes glow {
+@keyframes neonGlow {
 
     from {
 
         text-shadow:
-            0 0 10px cyan;
+            0 0 5px #00ffff,
+            0 0 10px #00ffff,
+            0 0 20px #00ffff,
+            0 0 40px #00ffff,
+            0 0 80px #00ffff;
     }
 
     to {
 
         text-shadow:
-            0 0 30px cyan,
-            0 0 50px cyan;
+            0 0 10px #00ffff,
+            0 0 20px #00ffff,
+            0 0 40px #00ffff,
+            0 0 80px #00ffff,
+            0 0 120px #00ffff;
     }
-}
+
+}}
 
 
 /*
