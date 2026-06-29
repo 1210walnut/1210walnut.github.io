@@ -54,10 +54,71 @@ header {
 */
 
 #title {
+    font-size: 4rem;
+    color: #00ffff;
+    text-align: center;
+    margin: 0;
+    font-weight: bold;
+    letter-spacing: 3px;
 
-    font-size: 3.5rem;
+    animation: flicker 2.5s infinite;
 
-    animation: neonGlow 1.5s infinite alternate;
+    text-shadow:
+        0 0 5px #00ffff,
+        0 0 10px #00ffff,
+        0 0 20px #00ffff,
+        0 0 40px #00ffff,
+        0 0 80px #00ffff;
+}
+
+@keyframes flicker {
+
+    /* 点灯 */
+    0%, 4%, 100% {
+        opacity: 1;
+        text-shadow:
+            0 0 5px #00ffff,
+            0 0 10px #00ffff,
+            0 0 20px #00ffff,
+            0 0 40px #00ffff,
+            0 0 80px #00ffff;
+    }
+
+    /* 少し暗くなる */
+    5%, 6% {
+        opacity: 0.3;
+    }
+
+    /* 消える */
+    7%, 8% {
+        opacity: 0;
+        text-shadow: none;
+    }
+
+    /* カチッと点く */
+    9%, 10% {
+        opacity: 1;
+    }
+
+    /* また消える */
+    11%, 12% {
+        opacity: 0;
+    }
+
+    /* カチッ */
+    13%, 14% {
+        opacity: 1;
+    }
+
+    /* 少し暗い */
+    15% {
+        opacity: 0.5;
+    }
+
+    /* 完全点灯 */
+    16%, 100% {
+        opacity: 1;
+    }
 }
 
 
@@ -65,6 +126,7 @@ header {
 光るアニメーション
 */
 
+/*
 @keyframes neonGlow {
 
     from {
@@ -87,8 +149,9 @@ header {
             0 0 120px #00ffff;
     }
 
-}}
+}
 
+*/
 
 /*
 ====================================
