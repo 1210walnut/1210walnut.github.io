@@ -52,7 +52,119 @@ header {
 タイトル
 ====================================
 */
+#title {
 
+    font-size: 4.5rem;
+    font-weight: bold;
+    color: #00ffff;
+    letter-spacing: 3px;
+
+    animation: neonBuzz 4s infinite;
+
+}
+
+@keyframes neonBuzz {
+
+    /* 完全に消えている */
+    0% {
+        opacity: 0;
+        text-shadow: none;
+    }
+
+    /* ジッ */
+    2% {
+        opacity: .2;
+        text-shadow: 0 0 3px cyan;
+    }
+
+    /* 消える */
+    4% {
+        opacity: 0;
+        text-shadow: none;
+    }
+
+    /* カチッ */
+    6% {
+        opacity: 1;
+        text-shadow:
+            0 0 5px cyan,
+            0 0 10px cyan,
+            0 0 20px cyan;
+    }
+
+    /* また消える */
+    8% {
+        opacity: 0;
+        text-shadow: none;
+    }
+
+    /* ジジッ */
+    10% {
+        opacity: .4;
+        text-shadow:
+            0 0 5px cyan;
+    }
+
+    12% {
+        opacity: 0;
+        text-shadow: none;
+    }
+
+    /* 点く */
+    15% {
+        opacity: 1;
+        text-shadow:
+            0 0 5px cyan,
+            0 0 15px cyan,
+            0 0 30px cyan,
+            0 0 60px cyan;
+    }
+
+    /* 少し暗くなる */
+    18% {
+        opacity: .6;
+    }
+
+    /* ジッ */
+    20% {
+        opacity: .9;
+    }
+
+    22% {
+        opacity: .2;
+        text-shadow:
+            0 0 2px cyan;
+    }
+
+    /* 最後のカチッ */
+    25% {
+        opacity: 1;
+        text-shadow:
+            0 0 5px cyan,
+            0 0 15px cyan,
+            0 0 30px cyan,
+            0 0 60px cyan,
+            0 0 120px cyan;
+    }
+
+    /* 安定して光る */
+    30%,
+    100% {
+        opacity: 1;
+        text-shadow:
+            0 0 5px cyan,
+            0 0 10px cyan,
+            0 0 20px cyan,
+            0 0 40px cyan,
+            0 0 80px cyan,
+            0 0 120px cyan;
+    }
+
+}
+/*
+====================================
+蛍光灯みたいな
+====================================
 #title {
     font-size: 4rem;
     color: #00ffff;
@@ -74,6 +186,9 @@ header {
 @keyframes flicker {
 
     /* 点灯 */
+    
+/*
+
     0%, 4%, 100% {
         opacity: 1;
         text-shadow:
@@ -85,11 +200,16 @@ header {
     }
 
     /* 少し暗くなる */
+    
+/*
     5%, 6% {
         opacity: 0.3;
     }
 
     /* 消える */
+    
+/*
+
     7%, 8% {
         opacity: 0;
         text-shadow: none;
@@ -101,25 +221,39 @@ header {
     }
 
     /* また消える */
+    
+/*
+
     11%, 12% {
         opacity: 0;
     }
 
     /* カチッ */
+    
+/*
+
     13%, 14% {
         opacity: 1;
     }
 
     /* 少し暗い */
+    
+/*
+
     15% {
         opacity: 0.5;
     }
 
     /* 完全点灯 */
+    
+/*
+
     16%, 100% {
         opacity: 1;
     }
 }
+
+*/
 
 
 /*
