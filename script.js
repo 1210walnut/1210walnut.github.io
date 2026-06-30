@@ -10,7 +10,7 @@ const particleArea =
 /*
 粒子を100個作る
 */
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 200; i++) {
 
     const particle =
         document.createElement("div");
