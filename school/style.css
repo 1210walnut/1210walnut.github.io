@@ -1,0 +1,413 @@
+/*
+====================================
+全体設定
+====================================
+*/
+
+body {
+
+    margin: 0;
+
+    background: #0d1117;
+
+    color: white;
+
+    font-family: Arial, sans-serif;
+}
+
+
+/*
+====================================
+背景アニメーション領域
+====================================
+*/
+
+#particles {
+
+    position: fixed;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: -1;
+}
+
+
+/*
+====================================
+ヘッダー
+====================================
+*/
+
+header {
+
+    text-align: center;
+
+    padding: 100px 20px;
+    
+}
+
+/*
+====================================
+タイトル
+====================================
+*/
+#title {
+
+    font-size: 4.5rem;
+    font-weight: bold;
+    color: #00ffff;
+    letter-spacing: 3px;
+
+    animation: neonBuzz 4s infinite;
+
+}
+
+@keyframes neonBuzz {
+
+    /* 完全に消えている */
+    0% {
+        opacity: 0;
+        text-shadow: none;
+    }
+
+    /* ジッ */
+    2% {
+        opacity: .2;
+        text-shadow: 0 0 3px cyan;
+    }
+
+    /* 消える */
+    4% {
+        opacity: 0;
+        text-shadow: none;
+    }
+
+    /* カチッ */
+    6% {
+        opacity: 1;
+        text-shadow:
+            0 0 5px cyan,
+            0 0 10px cyan,
+            0 0 20px cyan;
+    }
+
+    /* また消える */
+    8% {
+        opacity: 0;
+        text-shadow: none;
+    }
+
+    /* ジジッ */
+    10% {
+        opacity: .4;
+        text-shadow:
+            0 0 5px cyan;
+    }
+
+    12% {
+        opacity: 0;
+        text-shadow: none;
+    }
+
+    /* 点く */
+    15% {
+        opacity: 1;
+        text-shadow:
+            0 0 5px cyan,
+            0 0 15px cyan,
+            0 0 30px cyan,
+            0 0 60px cyan;
+    }
+
+    /* 少し暗くなる */
+    18% {
+        opacity: .6;
+    }
+
+    /* ジッ */
+    20% {
+        opacity: .9;
+    }
+
+    22% {
+        opacity: .2;
+        text-shadow:
+            0 0 2px cyan;
+    }
+
+    /* 最後のカチッ */
+    25% {
+        opacity: 1;
+        text-shadow:
+            0 0 5px cyan,
+            0 0 15px cyan,
+            0 0 30px cyan,
+            0 0 60px cyan,
+            0 0 120px cyan;
+    }
+
+    /* 安定して光る */
+    30%,
+    100% {
+        opacity: 1;
+        text-shadow:
+            0 0 5px cyan,
+            0 0 10px cyan,
+            0 0 20px cyan,
+            0 0 40px cyan,
+            0 0 80px cyan,
+            0 0 120px cyan;
+    }
+
+}
+/*
+====================================
+蛍光灯みたいな
+====================================
+#title {
+    font-size: 4rem;
+    color: #00ffff;
+    text-align: center;
+    margin: 0;
+    font-weight: bold;
+    letter-spacing: 3px;
+
+    animation: flicker 2.5s infinite;
+
+    text-shadow:
+        0 0 5px #00ffff,
+        0 0 10px #00ffff,
+        0 0 20px #00ffff,
+        0 0 40px #00ffff,
+        0 0 80px #00ffff;
+}
+
+@keyframes flicker {
+
+    /* 点灯 */
+    
+/*
+
+    0%, 4%, 100% {
+        opacity: 1;
+        text-shadow:
+            0 0 5px #00ffff,
+            0 0 10px #00ffff,
+            0 0 20px #00ffff,
+            0 0 40px #00ffff,
+            0 0 80px #00ffff;
+    }
+
+    /* 少し暗くなる */
+    
+/*
+    5%, 6% {
+        opacity: 0.3;
+    }
+
+    /* 消える */
+    
+/*
+
+    7%, 8% {
+        opacity: 0;
+        text-shadow: none;
+    }
+
+    /* カチッと点く */
+    9%, 10% {
+        opacity: 1;
+    }
+
+    /* また消える */
+    
+/*
+
+    11%, 12% {
+        opacity: 0;
+    }
+
+    /* カチッ */
+    
+/*
+
+    13%, 14% {
+        opacity: 1;
+    }
+
+    /* 少し暗い */
+    
+/*
+
+    15% {
+        opacity: 0.5;
+    }
+
+    /* 完全点灯 */
+    
+/*
+
+    16%, 100% {
+        opacity: 1;
+    }
+}
+
+*/
+
+
+/*
+光るアニメーション
+*/
+
+/*
+@keyframes neonGlow {
+
+    from {
+
+        text-shadow:
+            0 0 5px #00ffff,
+            0 0 10px #00ffff,
+            0 0 20px #00ffff,
+            0 0 40px #00ffff,
+            0 0 80px #00ffff;
+    }
+
+    to {
+
+        text-shadow:
+            0 0 10px #00ffff,
+            0 0 20px #00ffff,
+            0 0 40px #00ffff,
+            0 0 80px #00ffff,
+            0 0 120px #00ffff;
+    }
+
+}
+
+*/
+
+/*
+====================================
+メニュー
+====================================
+*/
+
+nav {
+
+    text-align: center;
+
+    margin-bottom: 50px;
+}
+
+nav a {
+
+    color: white;
+
+    text-decoration: none;
+
+    margin: 20px;
+
+    font-size: 1.2rem;
+}
+
+nav a:hover {
+
+    color: cyan;
+}
+
+
+/*
+====================================
+各セクション
+====================================
+*/
+
+section {
+
+    width: 80%;
+
+    margin: auto;
+
+    margin-bottom: 80px;
+}
+
+/*
+====================================
+お知らせ
+====================================
+*/
+
+#news .project {
+
+    border-left: 5px solid cyan;
+
+}
+
+#news h3 {
+
+    margin-top: 0;
+
+    color: cyan;
+
+}
+
+/*
+====================================
+スキルカード
+====================================
+*/
+
+.card {
+
+    display: inline-block;
+
+    padding: 15px 30px;
+
+    background: #161b22;
+
+    border-radius: 10px;
+
+    margin: 10px;
+
+    transition: 0.3s;
+}
+
+.card:hover {
+
+    transform: scale(1.1);
+
+    background: #1f2937;
+}
+
+
+/*
+====================================
+作品カード
+====================================
+*/
+
+.project {
+
+    background: #161b22;
+
+    padding: 20px;
+
+    margin-top: 20px;
+
+    border-radius: 10px;
+}
+
+
+/*
+====================================
+フッター
+====================================
+*/
+
+footer {
+
+    text-align: center;
+
+    padding: 30px;
+}
